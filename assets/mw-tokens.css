@@ -1,0 +1,276 @@
+/* =============================================================
+   MINDWAVES — Industrial AI Design Tokens
+   Colors + Typography
+   -------------------------------------------------------------
+   Brand pillars: magenta→purple wave, deep void background.
+   Industrial AI infrastructure — technical, precise, futuristic.
+   ============================================================= */
+
+/* ---- Fonts (Google Fonts) ----
+   Heading: Space Grotesk    — futuristic grotesque for titles
+   Body:    Inter            — neutral, readable enterprise UI
+   Mono:    JetBrains Mono   — system telemetry, code, captions
+*/
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ============================================================
+     COLORS — Brand
+     ============================================================ */
+  --mw-magenta:      #F51EE1;  /* Brand magenta — RGB 245 30 225 */
+  --mw-magenta-hot:  #FF2EE8;  /* Hover/highlight */
+  --mw-purple:       #6419E1;  /* Brand purple  — RGB 100 25 225 */
+  --mw-purple-deep:  #4A0FB8;  /* Pressed/shade */
+  --mw-void:         #0F051E;  /* Brand near-black — RGB 15 5 30 */
+  --mw-white:        #FFFFFF;
+
+  /* Gradient — the brand's signature wave */
+  --mw-gradient:        linear-gradient(90deg, #F51EE1 0%, #6419E1 100%);
+  --mw-gradient-soft:   linear-gradient(135deg, rgba(245,30,225,0.18) 0%, rgba(100,25,225,0.10) 100%);
+  --mw-gradient-radial: radial-gradient(circle at 70% 30%, rgba(100,25,225,0.45) 0%, rgba(15,5,30,0) 60%),
+                        radial-gradient(circle at 20% 90%, rgba(245,30,225,0.20) 0%, rgba(15,5,30,0) 55%);
+  --mw-glow:            0 0 32px rgba(245,30,225,0.35);
+  --mw-glow-purple:     0 0 28px rgba(100,25,225,0.45);
+
+  /* ============================================================
+     COLORS — Neutral scale (industrial cool-purple-tinged)
+     Built on the void so neutrals harmonise with the dark mode.
+     ============================================================ */
+  --mw-ink-1000: #0F051E;  /* void / page bg in dark mode */
+  --mw-ink-950:  #160A28;  /* surface raised */
+  --mw-ink-900:  #1E1233;  /* card bg */
+  --mw-ink-800:  #2A1D43;  /* card hover */
+  --mw-ink-700:  #3A2D58;  /* border / divider strong */
+  --mw-ink-600:  #4E416E;  /* muted ink */
+  --mw-ink-500:  #6A5E87;  /* placeholder */
+  --mw-ink-400:  #8E83A8;  /* tertiary text */
+  --mw-ink-300:  #B4ABC8;  /* secondary text */
+  --mw-ink-200:  #D6D0E2;  /* light divider on dark */
+  --mw-ink-100:  #ECE8F2;  /* light bg on light */
+  --mw-ink-50:   #F7F5FB;  /* lightest surface */
+  --mw-ink-0:    #FFFFFF;
+
+  /* ============================================================
+     COLORS — Semantic (status / telemetry)
+     Industrial AI uses status colors heavily: online, predict,
+     anomaly, fail. These are NOT loud — they're instrument-panel.
+     ============================================================ */
+  --mw-status-online:  #34E0A1;  /* "System Online" green */
+  --mw-status-info:    #4AC9FF;  /* telemetry blue */
+  --mw-status-warn:    #FFB547;  /* attention amber */
+  --mw-status-fail:    #FF5A6B;  /* anomaly red */
+  --mw-status-idle:    #8E83A8;  /* idle / standby */
+
+  /* ============================================================
+     SURFACES — Semantic naming (use these in components)
+     Default theme is DARK (industrial cockpit). Light mode below.
+     ============================================================ */
+  --mw-bg:          var(--mw-ink-1000);
+  --mw-bg-elevated: var(--mw-ink-950);
+  --mw-surface:     var(--mw-ink-900);
+  --mw-surface-2:   var(--mw-ink-800);
+  --mw-border:      rgba(255,255,255,0.08);
+  --mw-border-strong: rgba(255,255,255,0.16);
+  --mw-divider:     rgba(255,255,255,0.06);
+
+  --mw-fg:    #F2EEF9;          /* primary text */
+  --mw-fg-2:  var(--mw-ink-300);  /* secondary */
+  --mw-fg-3:  var(--mw-ink-400);  /* tertiary / labels */
+  --mw-fg-4:  var(--mw-ink-500);  /* muted / disabled */
+
+  --mw-accent:        var(--mw-magenta);
+  --mw-accent-2:      var(--mw-purple);
+  --mw-accent-bg:     rgba(100,25,225,0.12);
+  --mw-accent-border: rgba(245,30,225,0.40);
+
+  /* ============================================================
+     TYPOGRAPHY — Families
+     ============================================================ */
+  --mw-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --mw-font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mw-font-mono:    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ============================================================
+     TYPOGRAPHY — Type scale (1.250 — major third)
+     Sized for industrial dashboards & long-form marketing.
+     ============================================================ */
+  --mw-text-xs:   12px;   /* labels, tags, telemetry */
+  --mw-text-sm:   14px;   /* small body, captions */
+  --mw-text-base: 16px;   /* body */
+  --mw-text-md:   18px;   /* lede */
+  --mw-text-lg:   20px;
+  --mw-text-xl:   24px;
+  --mw-text-2xl:  32px;
+  --mw-text-3xl:  44px;
+  --mw-text-4xl:  60px;
+  --mw-text-5xl:  84px;   /* hero display */
+  --mw-text-6xl:  120px;  /* mega marquee */
+
+  --mw-leading-tight:  1.05;
+  --mw-leading-snug:   1.2;
+  --mw-leading-normal: 1.5;
+  --mw-leading-loose:  1.7;
+
+  --mw-tracking-tight:  -0.025em;  /* display */
+  --mw-tracking-normal: -0.005em;  /* body — Inter looks better slightly tightened */
+  --mw-tracking-wide:    0.04em;   /* mono labels */
+  --mw-tracking-mega:    0.14em;   /* SECTION KICKERS, UPPERCASE */
+
+  /* ============================================================
+     SPACING / SHAPE / ELEVATION
+     ============================================================ */
+  --mw-space-1:  4px;
+  --mw-space-2:  8px;
+  --mw-space-3:  12px;
+  --mw-space-4:  16px;
+  --mw-space-5:  24px;
+  --mw-space-6:  32px;
+  --mw-space-7:  48px;
+  --mw-space-8:  64px;
+  --mw-space-9:  96px;
+  --mw-space-10: 128px;
+
+  --mw-radius-xs: 4px;
+  --mw-radius-sm: 6px;
+  --mw-radius:    10px;
+  --mw-radius-md: 14px;
+  --mw-radius-lg: 20px;
+  --mw-radius-xl: 28px;
+  --mw-radius-pill: 999px;
+
+  /* Industrial shadows — thin hairlines + deep ambient, never puffy */
+  --mw-shadow-0: 0 0 0 1px rgba(255,255,255,0.04);
+  --mw-shadow-1: 0 1px 0 rgba(255,255,255,0.04) inset, 0 1px 2px rgba(0,0,0,0.3);
+  --mw-shadow-2: 0 1px 0 rgba(255,255,255,0.06) inset, 0 8px 24px rgba(0,0,0,0.35);
+  --mw-shadow-3: 0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 64px rgba(0,0,0,0.55);
+  --mw-shadow-glow: 0 0 0 1px rgba(245,30,225,0.35), 0 16px 48px rgba(100,25,225,0.35);
+
+  /* Motion — restrained, technical, no bounces */
+  --mw-ease:        cubic-bezier(0.22, 0.61, 0.36, 1);
+  --mw-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --mw-dur-fast:    140ms;
+  --mw-dur:         220ms;
+  --mw-dur-slow:    420ms;
+}
+
+/* ===========================================================
+   LIGHT THEME (rare — used for documents, technical specs)
+   =========================================================== */
+[data-theme="light"] {
+  --mw-bg:          var(--mw-ink-0);
+  --mw-bg-elevated: var(--mw-ink-50);
+  --mw-surface:     var(--mw-ink-100);
+  --mw-surface-2:   var(--mw-ink-200);
+  --mw-border:      rgba(15,5,30,0.10);
+  --mw-border-strong: rgba(15,5,30,0.20);
+  --mw-divider:     rgba(15,5,30,0.06);
+  --mw-fg:   var(--mw-ink-1000);
+  --mw-fg-2: var(--mw-ink-700);
+  --mw-fg-3: var(--mw-ink-600);
+  --mw-fg-4: var(--mw-ink-500);
+}
+
+/* ===========================================================
+   SEMANTIC ELEMENT STYLES
+   Apply by adding the matching class OR use as ref for prose.
+   =========================================================== */
+
+.mw-h1, .mw-display {
+  font-family: var(--mw-font-display);
+  font-weight: 600;
+  font-size: clamp(48px, 6vw, var(--mw-text-5xl));
+  line-height: var(--mw-leading-tight);
+  letter-spacing: var(--mw-tracking-tight);
+  color: var(--mw-fg);
+}
+
+.mw-h2 {
+  font-family: var(--mw-font-display);
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, var(--mw-text-4xl));
+  line-height: var(--mw-leading-tight);
+  letter-spacing: var(--mw-tracking-tight);
+  color: var(--mw-fg);
+}
+
+.mw-h3 {
+  font-family: var(--mw-font-display);
+  font-weight: 500;
+  font-size: var(--mw-text-2xl);
+  line-height: var(--mw-leading-snug);
+  letter-spacing: var(--mw-tracking-tight);
+  color: var(--mw-fg);
+}
+
+.mw-h4 {
+  font-family: var(--mw-font-sans);
+  font-weight: 600;
+  font-size: var(--mw-text-xl);
+  line-height: var(--mw-leading-snug);
+  color: var(--mw-fg);
+}
+
+.mw-lede {
+  font-family: var(--mw-font-sans);
+  font-weight: 400;
+  font-size: var(--mw-text-md);
+  line-height: var(--mw-leading-normal);
+  color: var(--mw-fg-2);
+  max-width: 64ch;
+}
+
+.mw-body {
+  font-family: var(--mw-font-sans);
+  font-weight: 400;
+  font-size: var(--mw-text-base);
+  line-height: var(--mw-leading-normal);
+  color: var(--mw-fg);
+}
+
+.mw-small {
+  font-family: var(--mw-font-sans);
+  font-weight: 400;
+  font-size: var(--mw-text-sm);
+  line-height: var(--mw-leading-normal);
+  color: var(--mw-fg-2);
+}
+
+/* The signature "system telemetry" caption — used heavily.
+   e.g. "SYSTEM ONLINE · MÖNCHENGLADBACH, DE · v.26.05 // BUILD STABLE" */
+.mw-mono, .mw-telemetry {
+  font-family: var(--mw-font-mono);
+  font-weight: 500;
+  font-size: var(--mw-text-xs);
+  letter-spacing: var(--mw-tracking-wide);
+  color: var(--mw-fg-3);
+  text-transform: uppercase;
+}
+
+.mw-kicker {
+  font-family: var(--mw-font-mono);
+  font-weight: 500;
+  font-size: var(--mw-text-xs);
+  letter-spacing: var(--mw-tracking-mega);
+  text-transform: uppercase;
+  color: var(--mw-magenta);
+}
+
+.mw-code {
+  font-family: var(--mw-font-mono);
+  font-weight: 400;
+  font-size: 0.92em;
+  padding: 2px 6px;
+  border-radius: var(--mw-radius-xs);
+  background: var(--mw-surface);
+  border: 1px solid var(--mw-border);
+  color: var(--mw-fg);
+}
+
+/* Wave-gradient text — for hero word accents only, sparingly. */
+.mw-grad-text {
+  background: var(--mw-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}

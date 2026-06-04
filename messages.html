@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inbox · Mindwaves</title>
+  <link rel="icon" href="assets/mindwaves-icon-gradient-circle.png" />
+  <link rel="stylesheet" href="assets/mw-tokens.css" />
+  <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="contact-modal.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const STORAGE_KEY = "mw_messages";
+    const { useState, useEffect } = React;
+
+    function fmt(iso) {
+      const d = new Date(iso);
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())} UTC`;
+    }
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+      catch { return []; }
+    }
+
+    function downloadJSON(arr) {
+      const blob = new Blob([JSON.stringify(arr, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `mindwaves-messages-${Date.now()}.json`;
+      a.click(); URL.revokeObjectURL(url);
+    }
+
+    function downloadCSV(arr) {
+      const esc = (s) => `"${String(s ?? "").replace(/"/g, '""')}"`;
+      const head = ["id","receivedAt","name","email","company","service","message"];
+      const rows = arr.map(m => head.map(h => esc(m[h])).join(","));
+      const csv = [head.join(","), ...rows].join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `mindwaves-messages-${Date.now()}.csv`;
+      a.click(); URL.revokeObjectURL(url);
+    }
+
+    function App() {
+      const [msgs, setMsgs] = useState(load());
+      const [open, setOpen] = useState(null);
+
+      useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+
+      const refresh = () => setMsgs(load());
+      const clearAll = () => {
+        if (!confirm("Permanently delete all stored messages from this browser?")) return;
+        localStorage.removeItem(STORAGE_KEY);
+        setMsgs([]);
+      };
+      const delOne = (id) => {
+        const next = msgs.filter(m => m.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        setMsgs(next);
+        setOpen(null);
+      };
+
+      const services = [...new Set(msgs.map(m => m.service))].length;
+      const today = msgs.filter(m => {
+        const d = new Date(m.receivedAt);
+        const n = new Date();
+        return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
+      }).length;
+      const week = msgs.filter(m => Date.now() - new Date(m.receivedAt).getTime() < 7 * 86400000).length;
+
+      return (
+        <React.Fragment>
+          <nav className="nav nav--scrolled" style={{ position: "static" }}>
+            <div className="container nav__row">
+              <a href="index.html" className="nav__logo">
+                <img src="assets/mindwaves-icon-gradient-circle.png" alt="" />
+                <span>Mindwaves</span>
+              </a>
+              <span className="mono" style={{ marginLeft: 16 }}>// INBOX · ADMIN</span>
+              <a href="index.html" className="btn btn--ghost nav__cta" style={{ marginLeft: "auto" }}>
+                <i data-lucide="arrow-left"></i>
+                Back to site
+              </a>
+            </div>
+          </nav>
+
+          <section className="inbox">
+            <div className="container">
+              <div className="inbox__hd">
+                <div>
+                  <span className="eyebrow accent">Local message log</span>
+                  <h1 style={{ marginTop: 12 }}>Inbox <span className="it">/ messages.</span></h1>
+                  <p>Every contact-form submission saved in this browser. Export to JSON/CSV, or wire a real backend by setting <code style={{ background: "var(--mw-bg)", border: "1px solid var(--mw-border)", padding: "1px 6px", borderRadius: 4 }}>FORM_ENDPOINT</code> in <code style={{ background: "var(--mw-bg)", border: "1px solid var(--mw-border)", padding: "1px 6px", borderRadius: 4 }}>contact-modal.jsx</code>.</p>
+                </div>
+                <div className="actions">
+                  <button className="btn btn--ghost" onClick={refresh}>
+                    <i data-lucide="rotate-cw"></i> Refresh
+                  </button>
+                  <button className="btn btn--ghost" onClick={() => downloadCSV(msgs)} disabled={!msgs.length}>
+                    <i data-lucide="download"></i> CSV
+                  </button>
+                  <button className="btn btn--ghost" onClick={() => downloadJSON(msgs)} disabled={!msgs.length}>
+                    <i data-lucide="download"></i> JSON
+                  </button>
+                  <button className="btn btn--ghost" onClick={clearAll} disabled={!msgs.length}>
+                    <i data-lucide="trash-2"></i> Clear
+                  </button>
+                </div>
+              </div>
+
+              <div className="inbox__stats">
+                <div className="inbox__stat">
+                  <span className="lbl">Total messages</span>
+                  <span className="val grad">{msgs.length}</span>
+                </div>
+                <div className="inbox__stat">
+                  <span className="lbl">Today</span>
+                  <span className="val">{today}</span>
+                </div>
+                <div className="inbox__stat">
+                  <span className="lbl">Last 7 days</span>
+                  <span className="val">{week}</span>
+                </div>
+                <div className="inbox__stat">
+                  <span className="lbl">Service areas</span>
+                  <span className="val">{services}</span>
+                </div>
+              </div>
+
+              {msgs.length === 0 ? (
+                <div className="inbox__empty">
+                  <h3>No messages yet.</h3>
+                  <p>Submissions from the homepage contact form will appear here.</p>
+                  <a className="btn btn--primary" href="index.html#contact" style={{ marginTop: 16 }}>
+                    Open the form <i data-lucide="arrow-up-right"></i>
+                  </a>
+                </div>
+              ) : (
+                <div className="inbox__list">
+                  {msgs.map((m) => (
+                    <div key={m.id} className="inbox__item" onClick={() => setOpen(open === m.id ? null : m.id)}>
+                      <span className="inbox__id">#{m.id.slice(-6)}</span>
+                      <div className="inbox__from">
+                        <span className="name">{m.name}</span>
+                        <span className="email">{m.email}{m.company ? ` · ${m.company}` : ""}</span>
+                      </div>
+                      <span className="inbox__service">{m.service}</span>
+                      <span className="inbox__time">{fmt(m.receivedAt)}</span>
+                      <i data-lucide={open === m.id ? "chevron-up" : "chevron-down"} className="inbox__chev"></i>
+
+                      {open === m.id && (
+                        <div className="inbox__preview" onClick={(e) => e.stopPropagation()}>
+                          <div className="row">
+                            <span><b>FROM</b> {m.name} &lt;{m.email}&gt;</span>
+                            {m.company && <span><b>CO.</b> {m.company}</span>}
+                            <span><b>WHEN</b> {fmt(m.receivedAt)}</span>
+                          </div>
+                          <div>{m.message}</div>
+                          <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                            <a className="btn btn--primary" href={`mailto:${m.email}?subject=Re: Mindwaves enquiry — ${encodeURIComponent(m.service)}`}>
+                              <i data-lucide="reply"></i> Reply
+                            </a>
+                            <button className="btn btn--ghost" onClick={() => navigator.clipboard?.writeText(m.message)}>
+                              <i data-lucide="copy"></i> Copy
+                            </button>
+                            <button className="btn btn--ghost" onClick={() => delOne(m.id)}>
+                              <i data-lucide="trash-2"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="inbox__note">
+                <h4>How this works</h4>
+                <p style={{ margin: "0 0 8px" }}>
+                  This page reads from <code>localStorage["mw_messages"]</code> — a per-browser store. It's not a shared database; messages submitted on one device won't appear on another.
+                </p>
+                <p style={{ margin: "0 0 8px" }}>
+                  <b style={{ color: "var(--mw-fg)" }}>For real centralised storage + automated email,</b> set <code>FORM_ENDPOINT</code> in <code>contact-modal.jsx</code> to a serverless form endpoint:
+                </p>
+                <ul style={{ margin: "0 0 8px", paddingLeft: 20, color: "var(--mw-fg-2)" }}>
+                  <li><b>Formspree</b> — sign up, get a URL like <code>https://formspree.io/f/xxxxxx</code>, paste it. Submissions email <code>consulting@mindwaves-consult.com</code> and appear in their dashboard.</li>
+                  <li><b>Resend / SendGrid + Vercel Function</b> — full control, DB optional.</li>
+                  <li><b>Self-hosted</b> — POST to your own API; persist in Postgres/Supabase.</li>
+                </ul>
+                <p style={{ margin: 0 }}>Until then, this inbox + the <code>mailto:</code> fallback keep the form fully functional.</p>
+              </div>
+            </div>
+          </section>
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
